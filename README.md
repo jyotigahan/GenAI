@@ -205,6 +205,18 @@ Input Tokens:
 
           │
           ▼
+      What Multi-Head Self-Attention do?
+      For each word (token), it creates three vectors:
+      Query (Q): What the word is "asking" about other words
+      Key (K): What each word "offers" to be matched with queries
+      Value (V): The actual information each word carries
+      It computes attention scores by comparing each token’s query with all tokens’ keys — figuring out how related each pair of words is.
+      These scores are used to weight the values, so each word’s new representation is a weighted sum of information from all other words.
+      Why multi-head:
+      Instead of doing this once, multiple “heads” do it in parallel, each looking at different aspects or relationships in the sentence.
+      This allows the model to capture multiple types of relationships simultaneously (e.g., syntax, semantics, sentiment).
+      Result:
+      Each word ends up with a rich, context-aware vector that understands its meaning in relation to the whole sentence.
 +--------------------------------------------------------------+
 | 1. Multi-Head Self-Attention                                  |
 |                                                              |
@@ -229,6 +241,18 @@ Input Tokens:
 +--------------------------------------------------------------+
           │
           ▼
+        what Position-wise Feed Forward Network (FFN) do :
+        Simple analogy: Imagine you just got a summary about each word from the attention layer — FFN is like a refiner, polishing and enhancing each summary 
+        individually to make it richer and more useful.
+        
+        1. Transforms each token’s representation independently - After the attention layer has mixed information across tokens, the FFN works on each token vector separately to            add more complexity and abstraction.
+        2. Adds non-linearity - FFN uses a small neural network with non-linear activation (ReLU) so the model can learn complex patterns and features beyond just weighted      
+        averages.
+        3. Extracts and mixes features inside each token - It helps the model understand more detailed aspects of each token’s meaning, like sentiment, grammar, or semantic roles.
+        4. Improves model capacity - By projecting each token vector to a higher dimension and back, FFN increases the model’s ability to represent subtle information.
+        5. Position-wise means no mixing between tokens here - Unlike attention, FFN does not combine tokens together; it processes each token’s vector independently but 
+        identically.
+         
 +--------------------------------------------------------------+
 | 3. Position-wise Feed Forward Network (FFN)                  |
 |                                                              |
@@ -243,6 +267,34 @@ Input Tokens:
 +--------------------------------------------------------------+
           │
           ▼
+           What Add & Layer Normalization do :
+           Simple analogy:
+           Imagine you’re improving a draft by making edits but always keep the original draft intact — then you standardize the result so it’s consistent and easier to work with.
+                      
+            1. Add (Residual Connection):
+            This means adding the input of a sub-layer back to its output before passing it on.
+            Purpose: Helps preserve original information and prevent degradation when stacking many layers.
+            Makes it easier for the network to learn small changes (residuals) rather than completely new transformations.
+            
+            2. Layer Normalization:
+            Normalizes the summed vector across its features for each individual token.
+            It adjusts the vector to have a mean of zero and variance of one (plus learnable scale and shift).
+            Purpose: Stabilizes and speeds up training, helping gradients flow better.
+            
+            3. Why both together?
+            First add residual (input + output) → then normalize the result.
+            This combination ensures stable, deep training with effective gradient flow.
+            Helps avoid vanishing or exploding gradients in very deep Transformer models.
+            
+            4. Where does it happen?
+            After Multi-Head Self-Attention
+            After Feed Forward Network (FFN)
+            
+            5. Summary:
+            Step	Effect
+            Add residual connection	Keeps original info, eases training
+            Layer normalization	Stabilizes and normalizes data
+ 
 +--------------------------------------------------------------+
 | 4. Add & Layer Normalization                                  |
 |  - Add residual connection: input to FFN + FFN output        |
@@ -278,14 +330,14 @@ Output: "Positive" sentiment prediction
                                                         Transformer Decoder: Full Architecture Overview
  
 
-Explanation of each component:
-Embedding: Converts target token indices into dense vector representations.
-Positional Encoding: Adds position information since Transformer has no recurrence or convolution.
-Masked Multi-Head Self-Attention: Allows the decoder to attend to previous tokens in the output sequence but masks future tokens to prevent “cheating” during training.
-Add & Norm: Residual connection plus layer normalization stabilizes and speeds up training.
-Encoder-Decoder Attention: Enables the decoder to attend over the encoder’s output representations, integrating the source input context.
-Feed Forward Network: Position-wise fully connected layer applied to each position independently.
-Linear & Softmax: Final layer to generate probabilities over the target vocabulary for the next token prediction.
+    Explanation of each component:
+    Embedding: Converts target token indices into dense vector representations.
+    Positional Encoding: Adds position information since Transformer has no recurrence or convolution.
+    Masked Multi-Head Self-Attention: Allows the decoder to attend to previous tokens in the output sequence but masks future tokens to prevent “cheating” during training.
+    Add & Norm: Residual connection plus layer normalization stabilizes and speeds up training.
+    Encoder-Decoder Attention: Enables the decoder to attend over the encoder’s output representations, integrating the source input context.
+    Feed Forward Network: Position-wise fully connected layer applied to each position independently.
+    Linear & Softmax: Final layer to generate probabilities over the target vocabulary for the next token prediction.
 
                       Transformer Decoder Architecture
 
