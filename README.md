@@ -216,7 +216,8 @@ Input Tokens:
 |  Example:                                                    |
 |  - Token "design" query attends to tokens "new", "website"   |
 |    and "user-friendly" to capture related context            |
-|  - Attention Scores measure relationships between tokens     |
+|  - Attention Scores measure relationships between tokens
+    (e.g., "love" attends "user-friendly", "design")
 |  - Weighted sum of values produces context-aware vectors     |
 +--------------------------------------------------------------+
           │
@@ -249,8 +250,29 @@ Input Tokens:
 +--------------------------------------------------------------+
           │
           ▼
-Output: Refined token embeddings capturing rich context of the sentence,
-ready to be passed to next encoder layer or downstream task.
++--------------------------------------------------------------+
+|                      Encoder Layer N                         |
++--------------------------------------------------------------+
+       │
+       ▼
++--------------------------------------------------------------+
+|                   Output: Contextualized Embeddings          |
+|                                                              |
+| - Each token vector now contains rich context                 |
+| - Ready for downstream tasks like sentiment classification    |
++--------------------------------------------------------------+
+       │
+       ▼
++--------------------------------------------------------------+
+|                     Classification Head                      |
+|                                                              |
+| - Pool token embeddings (e.g., [CLS] token or average)        |
+| - Feed through feed-forward layers                            |
+| - Output sentiment: Positive, Neutral, or Negative            |
++--------------------------------------------------------------+
+       │
+       ▼
+Output: "Positive" sentiment prediction
 
  
                                                         Transformer Decoder: Full Architecture Overview
